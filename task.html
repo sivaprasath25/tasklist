@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-0DRBgt3V8Z1WzQYuGYMDWA6HXaAzgGONNcTPRiZWySeZKa4sRFjrHFJ2Jc29lPpm8/GcYRdftopXfO0XaHK9Hg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #todo-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .task span {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .task:hover {
+            background-color: #e0e0e0;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        #new-task {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #task-input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        #add-task-btn {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #add-task-btn:hover {
+            background-color: #45a049;
+        }
+
+        #remove-task-btn {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #remove-task-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+<div id="todo-container">
+    <div class="task">
+        <input type="checkbox">
+        <span class="task-text">Example Task</span>
+        <button class="remove-task"><i class="fas fa-trash"></i></button>
+    </div>
+    
+    <!-- Add more tasks here -->
+
+    <div id="new-task">
+        <input type="text" id="task-input" placeholder="Add a new task">
+        <button id="add-task-btn" onclick="addTask()"><i class="fas fa-plus"></i> Add Task</button>
+        <button id="remove-task-btn" onclick="removeLastTask()"><i class="fas fa-trash"></i> Remove Task</button>
+    </div>
+</div>
+
+<script>
+    // JavaScript for handling task actions
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener for checkbox change
+        document.querySelectorAll('.task input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                toggleTaskState(this);
+            });
+        });
+
+        // Add event listener for remove task button
+        document.querySelectorAll('.remove-task').forEach(function(removeBtn) {
+            removeBtn.addEventListener('click', function() {
+                removeTask(this);
+            });
+        });
+    });
+
+    function toggleTaskState(checkbox) {
+        var taskText = checkbox.parentNode.querySelector('.task-text');
+        taskText.classList.toggle('completed', checkbox.checked);
+    }
+
+    function removeTask(button) {
+        var task = button.parentNode;
+        task.parentNode.removeChild(task);
+    }
+
+    function addTask() {
+        var taskInput = document.getElementById('task-input');
+        var taskText = taskInput.value.trim();
+
+        if (taskText !== '') {
+            var newTask = document.createElement('div');
+            newTask.classList.add('task');
+
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+
+            var taskSpan = document.createElement('span');
+            taskSpan.classList.add('task-text');
+            taskSpan.textContent = taskText;
+
+            var removeBtn = document.createElement('button');
+            removeBtn.classList.add('remove-task');
+            removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+
+            newTask.appendChild(checkbox);
+            newTask.appendChild(taskSpan);
+            newTask.appendChild(removeBtn);
+
+            // Add event listener for new checkbox
+            checkbox.addEventListener('change', function() {
+                toggleTaskState(checkbox);
+            });
+
+            // Add event listener for new remove button
+            removeBtn.addEventListener('click', function() {
+                removeTask(removeBtn);
+            });
+
+            document.getElementById('todo-container').appendChild(newTask);
+            taskInput.value = '';
+        }
+    }
+
+    function removeLastTask() {
+        var tasks = document.querySelectorAll('.task');
+        if (tasks.length > 0) {
+            tasks[tasks.length - 1].remove();
+        }
+    }
+</script>
+
+</body>
+</html>
